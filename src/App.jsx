@@ -1,38 +1,45 @@
+import { useState } from 'react';
+import { Feedback, RatingContainer } from './components';
+import ratingsData from './utils/ratings';
 import './App.scss';
 
 function App() {
+  const [ratings, setRatings] = useState(ratingsData);
+  const [selectedRating, setSelectedRating] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  const handleClick = () => {
+    if (selectedRating) {
+      setFeedback(selectedRating);
+    } else {
+      setIsEmpty(true);
+    }
+  };
+
   return (
     <div className="App">
       <div className="panel-container">
-        <strong>
-          How satisfied are you with our <br />
-          customer support performance?
-        </strong>
-        <div className="ratings-container">
-          <div className="rating">
-            <img
-              src="https://image.flaticon.com/icons/svg/187/187150.svg"
-              alt="Unhappy"
+        {isEmpty ? (
+          <p>Please select one of the ratings.</p>
+        ) : feedback ? (
+          <Feedback feedback={feedback} />
+        ) : (
+          <>
+            <strong>
+              How satisfied are you with our <br />
+              customer support performance?
+            </strong>
+            <RatingContainer
+              ratings={ratings}
+              setRatings={setRatings}
+              setSelectedRating={setSelectedRating}
             />
-            <small>Unhappy</small>
-          </div>
-          <div className="rating">
-            <img
-              src="https://image.flaticon.com/icons/svg/187/187136.svg"
-              alt="Neutral"
-            />
-            <small>Neutral</small>
-          </div>
-
-          <div className="rating">
-            <img
-              src="https://image.flaticon.com/icons/svg/187/187133.svg"
-              alt="Satisfied"
-            />
-            <small>Satisfied</small>
-          </div>
-        </div>
-        <button className="btn">Send Review</button>
+            <button type="button" className="btn" onClick={handleClick}>
+              Send Review
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
